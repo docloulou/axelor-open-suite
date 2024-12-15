@@ -21,7 +21,7 @@ Ensure you have the following installed on your system:
    ```
 3. Build and start the containers:
    ```bash
-   ./startup.sh
+   sh ./startup.sh
    ```
 4. Access the application in your browser at `http://localhost:7070` --> `user : admin | pass : admin`.
 
@@ -65,3 +65,74 @@ This project includes three scripts for easier management:
 3. `removeAll.sh` - Deletes all containers, volumes, and networks related to Axelor, allowing for a fresh start.
 
 Feel free to adapt the scripts to your requirements. For any issues, please raise an issue in the repository.
+
+# Guide: Connect pgAdmin to Axelor PostgreSQL Database
+
+This guide explains step-by-step how to use **pgAdmin** to connect to the PostgreSQL database used by Axelor.
+
+---
+
+## Prerequisites
+
+1. **pgAdmin** is installed and running.
+2. PostgreSQL is running as a Docker container.
+3. You have access to the pgAdmin credentials:
+
+   - Email: `admin@admin.com`
+   - Password: `admin`.
+
+4. The database details:
+   - **Hostname**: `postgres` (Docker service name).
+   - **Port**: `5432`.
+   - **Database Name**: `axelor`.
+   - **Username**: `axelor`.
+   - **Password**: `axelor`.
+
+---
+
+## Steps to Connect pgAdmin to the Database
+
+1. **Log into pgAdmin**:
+
+   - Open pgAdmin in your browser `http://localhost:5050`.
+   - Use the credentials:
+     - Email: `admin@admin.com`
+     - Password: `admin`.
+
+2. **Register the Server**:
+
+   - Right-click on "Servers" and choose **Register → Server**.
+   - Go to the **Connection** tab and fill in the following details:
+     - **Host name/address**: `postgres`
+     - **Port**: `5432`
+     - **Maintenance database**: `postgres`
+     - **Username**: `axelor`
+     - **Password**: `axelor`
+   - Click **Save**.
+
+3. **Test the Connection**:
+   - pgAdmin will attempt to connect to the database.
+   - If successful, you will see the database tree under the registered server.
+
+---
+
+## Common Issues & Fixes
+
+1. **Unable to Connect to Server**:
+
+   - Verify the `docker-compose` file is running and PostgreSQL is active:
+     ```bash
+     docker-compose ps
+     ```
+     Look for the `axelor-postgres` service.
+
+2. **Wrong Hostname**:
+
+   - In a Docker network, use the service name `postgres` instead of `localhost`.
+
+3. **Incorrect Credentials**:
+
+   - Double-check the database username and password. Both should be `axelor`.
+
+4. **Firewall Blocking Connections**:
+   - Ensure port `5432` is open and accessible.
