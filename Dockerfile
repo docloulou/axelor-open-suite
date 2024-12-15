@@ -15,17 +15,17 @@ RUN curl -L https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-b
     rm gradle.zip && \
     ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/bin/gradle
 
-# Clone Axelor source code for version 7.0
+# Clone Axelor source code for version 8.0
 RUN git clone ${AXELOR_REPO} ${APP_HOME} && \
     cd ${APP_HOME} && \
-    git checkout 7.0
+    git checkout 8.0
 
 # Update the .gitmodules file with the correct URL
 RUN sed -i 's|git@github.com:axelor/axelor-open-suite.git|https://github.com/axelor/axelor-open-suite.git|g' ${APP_HOME}/.gitmodules && \
     cd ${APP_HOME} && \
     git submodule init && \
     git submodule update && \
-    git submodule foreach git checkout 7.0
+    git submodule foreach git checkout 8.0
 
 # Ensure axelor-config.properties lines are replaced or appended
 RUN CONFIG_FILE=${APP_HOME}/src/main/resources/axelor-config.properties && \
@@ -49,8 +49,11 @@ RUN cd ${APP_HOME} && gradle war
 # Use Tomcat as the final runtime image
 FROM tomcat:9-jdk11
 
-# Copy the WAR file built in the previous stage
-COPY --from=builder /opt/axelor/build/libs/*.war /usr/local/tomcat/webapps/axelor.war
+# Remove the existing ROOT application in Tomcat (if any)
+RUN rm -rf /usr/local/tomcat/webapps/ROOT
+
+# Copy the WAR file built in the previous stage as ROOT.war ---> this is the default application --> http://localhost:7070 instead of http://localhost:7070/axelor
+COPY --from=builder /opt/axelor/build/libs/*.war /usr/local/tomcat/webapps/ROOT.war
 
 # Copy the generated axelor-config.properties file to Tomcat's conf directory
 COPY --from=builder /opt/axelor/src/main/resources/axelor-config.properties /usr/local/tomcat/conf/axelor-config.properties

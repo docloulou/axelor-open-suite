@@ -21,9 +21,24 @@ Ensure you have the following installed on your system:
    ```
 3. Build and start the containers:
    ```bash
-   docker-compose up --build
+   ./startup.sh
    ```
-4. Access the application in your browser at `http://localhost:7070`.
+4. Access the application in your browser at `http://localhost:7070` --> `user : admin | pass : admin`.
+
+Note : `Please note that when you run the app for the first time, it will take ±10 minutes to create database and prepare files...`
+
+## Stopping and Cleaning Up
+
+1. To stop and remove the Axelor containers, run:
+
+   ```bash
+   ./shutdown.sh
+   ```
+
+2. To delete all data and start fresh, run:
+   ```bash
+   ./removeAll.sh
+   ```
 
 ## Configuration Details
 
@@ -40,3 +55,13 @@ Ensure you have the following installed on your system:
 - **Database Connection Error**: Ensure the database container is running, and the credentials in `axelor-config.properties` match those in `docker-compose.yml`.
 
 - **Port Conflict**: If port `7070` is already in use, update the port mapping in the `docker-compose.yml` file.
+
+## Notes
+
+This project includes three scripts for easier management:
+
+1. `startup.sh` - Builds and starts the Axelor application.
+2. `shutdown.sh` - Stops and removes the Axelor containers without affecting data.
+3. `removeAll.sh` - Deletes all containers, volumes, and networks related to Axelor, allowing for a fresh start.
+
+Feel free to adapt the scripts to your requirements. For any issues, please raise an issue in the repository.
