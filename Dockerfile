@@ -18,14 +18,14 @@ RUN curl -L https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-b
 # Clone Axelor source code for version 8.0
 RUN git clone ${AXELOR_REPO} ${APP_HOME} && \
     cd ${APP_HOME} && \
-    git checkout 8.0
+    git checkout 8.2
 
 # Update the .gitmodules file with the correct URL
 RUN sed -i 's|git@github.com:axelor/axelor-open-suite.git|https://github.com/axelor/axelor-open-suite.git|g' ${APP_HOME}/.gitmodules && \
     cd ${APP_HOME} && \
     git submodule init && \
     git submodule update && \
-    git submodule foreach git checkout 8.0
+    git submodule foreach git checkout 8.2
 
 # Ensure axelor-config.properties lines are replaced or appended
 RUN CONFIG_FILE=${APP_HOME}/src/main/resources/axelor-config.properties && \
